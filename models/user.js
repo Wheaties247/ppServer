@@ -27,6 +27,11 @@ userModelObject
         next();
                
           })
+        .catch(err => {
+            console.log('Create ERROR:', err)
+           next(err);
+
+        });
         }
 
     })
@@ -65,7 +70,7 @@ userModelObject.login = (req, res, next) => {
             }
            next();
         }).catch(err => {
-            console.log('ERROR:', err)
+            console.log('Login ERROR:', err)
            next(err);
 
         });
@@ -73,18 +78,29 @@ userModelObject.login = (req, res, next) => {
 };
 userModelObject.edit = (req, res, next) =>{
   console.log("Within edit", req.body)
-  const properties = Object.keys(req.body)[0]
+  const {id, ...keys} = req.body 
+  const properties = Object.keys(keys)[0]
   console.log("properties", properties)
+  console.log("test edit", req.body[properties],
+        req.body.id)
+  db
+    .one(
+      `UPDATE USERS SET ${properties}= $1 WHERE user_id = $2 RETURNING *;`,
+      [
+        req.body[properties],
+        req.body.id
+      ]
+    )
+    .then(resp=>{
+        console.log("Ater Edit", resp)
+        next();
+    })
+    .catch(err => {
+            console.log('Edit ERROR:', err)
+           next(err);
 
-  // db
-  //   .one(
-  //     `UPDATE comments SET comment= $1 WHERE comment_id = $2 RETURNING *;`,
-  //     [
-  //       req.body.newComment,
-  //       req.params.comment_id
-  //     ]
-  //   )
-           next();
+        });
+          
 
 }
 module.exports = userModelObject;
