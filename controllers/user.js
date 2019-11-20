@@ -13,4 +13,7 @@ router.post("/register", user.create, (req, res)=>{
 	
 	res.json({userCreds: respdata})
 })
+router.put("/edit", (req, res)=>{
+	console.log("Put Request user", req.body)
+})
 module.exports = router;
