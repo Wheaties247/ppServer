@@ -13,7 +13,9 @@ router.post("/register", girl.create, (req, res)=>{
 	
 	res.json({modelCreds: respdata})
 })
-router.put("/edit", (req, res)=>{
+router.put("/edit", girl.edit, (req, res)=>{
 	console.log("Put Request Model", req.body)
+	res.json({resp: res.locals.editResp})
+	
 })
 module.exports = router;

@@ -80,5 +80,33 @@ const girlModelObject = {};
             });
            
     };
+    girlModelObject.edit = (req, res, next) =>{
+  console.log("Within edit", req.body)
+  const {id, ...keys} = req.body 
+  const properties = Object.keys(keys)[0]
+  console.log("properties", properties)
+  console.log("test edit", req.body[properties],
+        req.body.id)
+  db
+    .one(
+      `UPDATE MODELS SET ${properties}= $1 WHERE model_id = $2 RETURNING *;`,
+      [
+        req.body[properties],
+        req.body.id
+      ]
+    )
+    .then(resp=>{
+        console.log("Ater Edit", resp)
+        res.locals.editResp = resp
+        next();
+    })
+    .catch(err => {
+            console.log('Edit ERROR:', err)
+           next(err);
+
+        });
+          
+
+}
 
 module.exports = girlModelObject;
