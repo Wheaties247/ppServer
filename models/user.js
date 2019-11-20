@@ -17,10 +17,10 @@ userModelObject
         const passwordDigest = bcrypt.hashSync(password);
         console.log("passwordDigest", passwordDigest)
         db.oneOrNone(
-            'INSERT INTO users (user_name, email, password_digest, tokens) VALUES ($1, $2, $3, $4) RETURNING *;', [username, email, passwordDigest, 0])
+            'INSERT INTO users (user_name, email, password_digest, tokens, payment_info) VALUES ($1, $2, $3, $4, $5) RETURNING *;', [username, email, passwordDigest, 0, ""])
         .then(resp=>{
               console.log("After Insert", resp)
-              const respObj= {user_name:resp.user_name , email:resp.email, tokens: resp.tokens}
+              const respObj= {user_name:resp.user_name , email:resp.email, tokens: resp.tokens, paypal: resp.payment_info}
               console.log("respObj", respObj)
 
                res.locals.userCreds = respObj
