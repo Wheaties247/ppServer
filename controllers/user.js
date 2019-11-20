@@ -15,5 +15,6 @@ router.post("/register", user.create, (req, res)=>{
 })
 router.put("/edit", user.edit, (req, res)=>{
 	console.log("Put Request user", req.body)
+	res.json({resp: res.locals.editResp})
 })
 module.exports = router;
