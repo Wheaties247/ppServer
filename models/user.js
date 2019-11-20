@@ -17,7 +17,7 @@ userModelObject
         const passwordDigest = bcrypt.hashSync(password);
         console.log("passwordDigest", passwordDigest)
         db.oneOrNone(
-            'INSERT INTO users (user_name, email, password_digest) VALUES ($1, $2, $3) RETURNING *;', [username, email, passwordDigest])
+            'INSERT INTO users (user_name, email, password_digest, tokens) VALUES ($1, $2, $3, $4) RETURNING *;', [username, email, passwordDigest, 0])
         .then(resp=>{
               console.log("After Insert", resp)
               const respObj= {user_name:resp.user_name , email:resp.email, tokens: resp.tokens}
