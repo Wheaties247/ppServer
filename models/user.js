@@ -20,7 +20,7 @@ userModelObject
             'INSERT INTO users (user_name, email, password_digest, tokens, payment_info) VALUES ($1, $2, $3, $4, $5) RETURNING *;', [username, email, passwordDigest, 0, ""])
         .then(resp=>{
               console.log("After Insert", resp)
-              const respObj= {user_name:resp.user_name , email:resp.email, tokens: resp.tokens, paypal: resp.payment_info}
+              const respObj= {id: resp.user_id, user_name:resp.user_name , email:resp.email, tokens: resp.tokens, paypal: resp.payment_info}
               console.log("respObj", respObj)
 
                res.locals.userCreds = respObj
@@ -71,9 +71,20 @@ userModelObject.login = (req, res, next) => {
         });
        
 };
-userModelObject.edit = info =>{
+userModelObject.edit = (req, res, next) =>{
   console.log("Within edit", req.body)
+  const properties = Object.keys(req.body)[0]
+  console.log("properties", properties)
+
+  db
+    .one(
+      `UPDATE comments SET comment= $1 WHERE comment_id = $2 RETURNING *;`,
+      [
+        req.body.newComment,
+        req.params.comment_id
+      ]
+    )
            next();
-  
+
 }
 module.exports = userModelObject;

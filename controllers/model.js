@@ -14,6 +14,6 @@ router.post("/register", girl.create, (req, res)=>{
 	res.json({modelCreds: respdata})
 })
 router.put("/edit", (req, res)=>{
-	console.log("Put Request", req.body)
+	console.log("Put Request Model", req.body)
 })
 module.exports = router;
