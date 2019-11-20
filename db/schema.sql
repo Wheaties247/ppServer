@@ -1,0 +1,28 @@
+
+CREATE DATABASE pink_playhouse;
+
+DROP TABLE IF EXISTS users;
+
+CREATE TABLE users(
+user_id SERIAL PRIMARY KEY,
+user_name VARCHAR(255) NOT NULL UNIQUE,
+email VARCHAR(255) NOT NULL UNIQUE,
+tokens INTEGER,	
+payment_info VARCHAR(255),
+password_digest VARCHAR (255)NOT NULL
+);
+
+
+
+DROP TABLE IF EXISTS models;
+CREATE TABLE models(
+model_id SERIAL PRIMARY KEY,
+model_name VARCHAR(255) NOT NULL UNIQUE,
+email VARCHAR(255) NOT NULL UNIQUE,
+password_digest VARCHAR (255)NOT NULL,
+picture_url VARCHAR(255)NOT NULL,
+online BOOLEAN NOT NULL,
+payment_info VARCHAR(255) NOT NULL,
+astro_sign VARCHAR(255),
+tokens INTEGER
+);
