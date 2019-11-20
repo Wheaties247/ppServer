@@ -71,4 +71,9 @@ userModelObject.login = (req, res, next) => {
         });
        
 };
+userModelObject.edit = info =>{
+  console.log("Within edit", req.body)
+           next();
+  
+}
 module.exports = userModelObject;
