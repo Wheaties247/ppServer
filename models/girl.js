@@ -21,7 +21,7 @@ const girlModelObject = {};
             .then(resp=>{
                   console.log("After Insert", resp)
                   const respObj= {
-                      model_id: resp.model_id,
+                      id: resp.model_id,
                       user_name:resp.model_name,
                       email:resp.email, 
                       paypal:resp.payment_info, 

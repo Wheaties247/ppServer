@@ -76,14 +76,14 @@ userModelObject.edit = (req, res, next) =>{
   const properties = Object.keys(req.body)[0]
   console.log("properties", properties)
 
-  db
-    .one(
-      `UPDATE comments SET comment= $1 WHERE comment_id = $2 RETURNING *;`,
-      [
-        req.body.newComment,
-        req.params.comment_id
-      ]
-    )
+  // db
+  //   .one(
+  //     `UPDATE comments SET comment= $1 WHERE comment_id = $2 RETURNING *;`,
+  //     [
+  //       req.body.newComment,
+  //       req.params.comment_id
+  //     ]
+  //   )
            next();
 
 }
