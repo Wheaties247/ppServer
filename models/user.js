@@ -93,6 +93,7 @@ userModelObject.edit = (req, res, next) =>{
     )
     .then(resp=>{
         console.log("Ater Edit", resp)
+        res.locals.editResp = resp
         next();
     })
     .catch(err => {
