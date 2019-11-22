@@ -109,4 +109,8 @@ const girlModelObject = {};
 
 }
 
+girlModelObject.uploadImage =(req, res, next)=>{
+    console.log("within uploadImage model")
+    function upload(file, options, callback)
+}
 module.exports = girlModelObject;
