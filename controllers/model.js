@@ -18,7 +18,7 @@ router.put("/edit", girl.edit, (req, res)=>{
 	res.json({resp: res.locals.editResp})
 
 })
-router.post("/img_upload", (req, res)=>{
+router.post("/img_upload", girl.uploadImage ,(req, res)=>{
 	console.log("Upload Model End")
 	res.json("Upload Model Responce")
 })

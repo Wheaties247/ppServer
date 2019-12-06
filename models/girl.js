@@ -1,5 +1,6 @@
 const bcrypt = require('bcryptjs');
 
+
 const db = require('../db/index.js');
 
 const girlModelObject = {};
@@ -110,7 +111,18 @@ const girlModelObject = {};
 }
 
 girlModelObject.uploadImage =(req, res, next)=>{
-    console.log("within uploadImage model")
-    function upload(file, options, callback)
+    const cloudinary = require("cloudinary-core");
+    
+    console.log("within uploadImage model", req)
+
+    const cl = new cloudinary.Cloudinary({
+        cloud_name: "thepinkimageserver",
+         secure: true});
+    // console.log("cl", cl)
+    // cl.v2.uploader.upload("/home/my_image.jpg", 
+    // function(error, result) {
+    //     console.log(result, error)
+    // });
+    next();
 }
 module.exports = girlModelObject;
