@@ -14,8 +14,9 @@ app.use(express.json())
 
 const userControl = require('./controllers/user.js')
 const modelControl = require('./controllers/model.js')
-
+const webcamControl = require('./controllers/webcam.js')
 app.use('/users', userControl);
 app.use('/models', modelControl);
+app.use('/webcams', webcamControl);
 
 app.listen(PORT, () => console.log("Server listening on port", PORT));
