@@ -6,7 +6,7 @@ const nodemailer = require("nodemailer");
  
 const mailerObject = {};
 mailerObject.confimation = (req, res, next)=>{
-	console.log("within Mailer")
+	console.log("within Mailer", req.body)
 	const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {

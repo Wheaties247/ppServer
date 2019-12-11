@@ -1,4 +1,4 @@
-
+DROP DATABASE IF EXISTS pink_playhouse
 CREATE DATABASE pink_playhouse;
 
 DROP TABLE IF EXISTS users;
@@ -9,7 +9,8 @@ user_name VARCHAR(255) NOT NULL UNIQUE,
 email VARCHAR(255) NOT NULL UNIQUE,
 tokens INTEGER,	
 payment_info VARCHAR(255),
-password_digest VARCHAR (255)NOT NULL
+password_digest VARCHAR (255)NOT NULL,
+confirmed BOOLEAN NOT NULL
 );
 
 
