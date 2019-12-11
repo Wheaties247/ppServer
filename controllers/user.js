@@ -1,12 +1,14 @@
 const router = require("express").Router();
 const user = require("../models/user.js");
-
+const mailer = require("../models/mailer.js")
 router.post("/login", user.login, (req, res)=>{
 	// console.log("user login", req)
 
 	res.json({userCreds:res.locals.userCreds})
 })
-router.post("/register", user.create, (req, res)=>{
+router.post("/register", user.create, 
+	mailer.confimation
+	, (req, res)=>{
 
 	const respdata = res.locals.userCreds
 	console.log("user register", respdata)
