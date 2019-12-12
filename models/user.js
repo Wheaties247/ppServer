@@ -13,25 +13,34 @@ userModelObject
         console.log("After Find by email",resp)
         if(resp){
         res.locals.userCreds = "User already created"
-        }else{
-        const passwordDigest = bcrypt.hashSync(password);
-        console.log("passwordDigest", passwordDigest)
-        db.oneOrNone(
-            'INSERT INTO users (user_name, email, password_digest, tokens, payment_info) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *;', [username, email, passwordDigest, 0, "", false])
-        .then(resp=>{
-              console.log("After Insert", resp)
-              const respObj= {id: resp.user_id, user_name:resp.user_name , email:resp.email, tokens: resp.tokens, paypal: resp.payment_info}
-              console.log("respObj", respObj)
-
-               res.locals.userCreds = respObj
         next();
-               
-          })
-        .catch(err => {
-            console.log('Create ERROR:', err)
-           next(err);
+        }else{
+          const passwordDigest = bcrypt.hashSync(password);
+          console.log("passwordDigest", passwordDigest)
+          db.oneOrNone(
+              'INSERT INTO users (user_name, email, password_digest, tokens, payment_info, confirmed) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *;', [username, email, passwordDigest, 0, "", false ])
+          .then(resp=>{
+                console.log("After Insert", resp)
+                const respObj= 
+                {
+                 id: resp.user_id,
+                 user_name:resp.user_name,
+                 email:resp.email, 
+                 tokens: resp.tokens, 
+                 paypal: resp.payment_info
+               }
+                console.log("respObj", respObj)
 
-        });
+                 res.locals.userCreds = respObj
+        next();
+
+                 
+            })
+          .catch(err => {
+              console.log('Create ERROR:', err)
+             next(err);
+
+          });
         }
 
     })
