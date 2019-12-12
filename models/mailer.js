@@ -65,4 +65,8 @@ const mailerObject = {};
 			}
 		})
 	}
+	mailerObject.editVerification =(req, res, next)=>{
+		console.log("edit Verify", res.locals)
+		next();
+	}
 module.exports = mailerObject;

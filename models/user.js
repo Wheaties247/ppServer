@@ -12,10 +12,17 @@ userModelObject
     .then(resp=>{
         console.log("After Find by email",resp)
         if(resp){
-        res.locals.userCreds = "User already created"
+        res.locals.userCreds = "Email already in use"
         next();
         }else{
-          const passwordDigest = bcrypt.hashSync(password);
+          userModelObject
+    .findByUserName(username)
+    .then(resp=>{
+      if(resp){
+        res.locals.userCreds = "Username already in use"
+        next();
+      }else{
+        const passwordDigest = bcrypt.hashSync(password);
           console.log("passwordDigest", passwordDigest)
           db.oneOrNone(
               'INSERT INTO users (user_name, email, password_digest, tokens, payment_info, confirmed) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *;', [username, email, passwordDigest, 0, "", false ])
@@ -27,30 +34,39 @@ userModelObject
                  user_name:resp.user_name,
                  email:resp.email, 
                  tokens: resp.tokens, 
-                 paypal: resp.payment_info
+                 paypal: resp.payment_info,
+                 confirmed: resp.confirmed
                }
                 console.log("respObj", respObj)
 
                  res.locals.userCreds = respObj
         next();
-
-                 
-            })
+          })           
           .catch(err => {
               console.log('Create ERROR:', err)
              next(err);
 
           });
         }
-
     })
-
+    .catch(err => {
+              console.log('Create ERROR:', err)
+             next(err);
+           })
+    }
+  })
+    .catch(err => {
+              console.log('Create ERROR:', err)
+             next(err);
+           })
  };
 
 userModelObject.findByEmail = email => {
     return db.oneOrNone('SELECT * FROM users WHERE email = $1;', [email]);
 };
-
+userModelObject.findByUserName = username => {
+    return db.oneOrNone('SELECT * FROM users WHERE user_name = $1;', [username]);
+};
 userModelObject.findByName = username => {
     return db.oneOrNone('SELECT * FROM users WHERE user_name = $1 OR email = $2;', [username, username]);
 };

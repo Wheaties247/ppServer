@@ -21,7 +21,10 @@ router.get("/confirmAccount/:jwt",
 	(req, res)=>{
 		res.redirect("http://localhost:8000/UserLoginRegister")
 })
-router.put("/edit", user.edit, (req, res)=>{
+router.put("/edit", 
+	user.edit, 
+	mailer.editVerification,
+	(req, res)=>{
 	console.log("Put Request user", req.body)
 	res.json({resp: res.locals.editResp})
 })
