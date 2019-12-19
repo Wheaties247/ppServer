@@ -25,5 +25,6 @@ picture_url VARCHAR(255)NOT NULL,
 online BOOLEAN NOT NULL,
 payment_info VARCHAR(255) NOT NULL,
 astro_sign VARCHAR(255),
-tokens INTEGER
+tokens INTEGER,
+confirmed BOOLEAN NOT NULL
 );

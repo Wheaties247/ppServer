@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs');
-
-
+const axios = require('axios');
+const cloudinary = require("cloudinary").v2;
 const db = require('../db/index.js');
 
 const girlModelObject = {};
@@ -13,12 +13,19 @@ const girlModelObject = {};
         .then(resp=>{
             console.log("After Find by email",resp)
             if(resp){
-            res.locals.modelCreds = "User already created"
+            res.locals.modelCreds = "Email already in use"
             }else{
-            const passwordDigest = bcrypt.hashSync(password);
+            girlModelObject
+            .findByUserName(username)
+            .then(resp=>{
+              if(resp){
+                res.locals.modelCreds = "Username already in use"
+                next();
+              }else{
+                const passwordDigest = bcrypt.hashSync(password);
             console.log("passwordDigest", passwordDigest)
             db.oneOrNone(
-                'INSERT INTO models (model_name, email, password_digest, online, payment_info, picture_url, tokens, astro_sign) VALUES ($1, $2, $3 , $4, $5, $6, $7, $8) RETURNING *;', [username, email, passwordDigest, false, paypal, "modelStockImg.png", 0, null])
+                'INSERT INTO models (model_name, email, password_digest, online, payment_info, picture_url, tokens, astro_sign, confirmed) VALUES ($1, $2, $3 , $4, $5, $6, $7, $8, $9) RETURNING *;', [username, email, passwordDigest, false, paypal, "modelStockImg.png", 0, null, false])
             .then(resp=>{
                   console.log("After Insert", resp)
                   const respObj= {
@@ -28,15 +35,27 @@ const girlModelObject = {};
                       paypal:resp.payment_info, 
                       tokens: resp.tokens,
                       astro_sign: resp.astro_sign,
-                      picture_url: resp.picture_url
+                      picture_url: resp.picture_url,
+                      confirmed: resp.confirmed
                   }
                   console.log("respObj", respObj)
 
                    res.locals.modelCreds = respObj
                 next();   
               })
+            .catch(err =>{
+              console.log("there was an error creating a new user", err)
+            })
+              }
+            })
+            .catch(err =>{
+              console.log("there was an error finding the record by user", err)
+            })
             }
             
+        })
+        .catch(err=>{
+          console.log("there was an error finding the record by email", err)
         })
         
      };
@@ -47,6 +66,9 @@ const girlModelObject = {};
 
     girlModelObject.findByName = username => {
         return db.oneOrNone('SELECT * FROM models WHERE model_name = $1 OR email = $2;', [username, username]);
+    };
+    girlModelObject.findByUserName = username => {
+    return db.oneOrNone('SELECT * FROM users WHERE user_name = $1;', [username]);
     };
 
     girlModelObject.login = (req, res, next) => {
@@ -111,18 +133,40 @@ const girlModelObject = {};
 }
 
 girlModelObject.uploadImage =(req, res, next)=>{
-    const cloudinary = require("cloudinary-core");
-    
+    cloudinary.config({
+      cloud_name: process.env.CLOUDNAME,
+      api_key: process.env.APIKEY,
+      api_secret:process.env.APISECRET
+    })
+    const url = "https://api.cloudinary.com/v1_1/thepinkimageserver"
+    // const upload_preset = "tkl7opjd"
     console.log("within uploadImage model", req)
-
-    const cl = new cloudinary.Cloudinary({
-        cloud_name: "thepinkimageserver",
-         secure: true});
+    next();
+    // axios({
+    //   method:"POST",
+    //   url: url, 
+    //   headers:{
+    //     "Content-Type": "application/x-www-form-urlencoded"
+    //   },
+    //   data: req.body.file
+    // })
+    // .then(resp=>{
+    //   console.log("success image upload", resp)
+    //   res.locals.img = resp
+    //    next();
+    // })
+    // .catch(err=>{
+    //   console.log("there was an error", err)
+    //   next(err)
+    // })
+    // const cl = new cloudinary.Cloudinary({
+    //     cloud_name: "thepinkimageserver",
+    //      secure: true});
     // console.log("cl", cl)
     // cl.v2.uploader.upload("/home/my_image.jpg", 
     // function(error, result) {
     //     console.log(result, error)
     // });
-    next();
+   
 }
 module.exports = girlModelObject;

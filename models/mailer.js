@@ -9,7 +9,7 @@ const mailerObject = {};
 	mailerObject.registrationEmail = (req, res, next)=>{
 		if(res.locals.userCreds!=="User already created"){
 			const token = jwt.sign(req.body.username, process.env.SECRET_TOKEN)
-			console.log("within Mailer", req.bodyspake)
+			console.log("within Mailer", req)
 			const transporter = nodemailer.createTransport({
 		    service: "gmail",
 		    auth: {
@@ -66,7 +66,47 @@ const mailerObject = {};
 		})
 	}
 	mailerObject.editVerification =(req, res, next)=>{
-		console.log("edit Verify", res.locals)
+		console.log("edit Verify", req)
+
+		const { 
+			user_id,
+   			user_name,
+		    email,
+		    tokens,
+		    payment_info,
+		    password_digest,
+		    confirmed
+ 				} = res.locals.editResp
+		const transporter = nodemailer.createTransport({
+		    service: "gmail",
+		    auth: {
+		      user: process.env.EMAIL, // generated ethereal user
+		      pass: process.env.PASS // generated ethereal password
+		    	}
+		  	});
+		const msg = `
+		  		There has been a recent change to your account information, here are your new account details:
+		  		User Name : ${user_name}
+		  		Email Address : ${email} 
+		  		Current tokens : ${tokens}
+		  		Payment Info : ${payment_info}
+
+		  		
+		  		`
+		const mailOptions = {
+		  		from:process.env.EMAIL,
+		  		// req.body.email
+		  		to:"timothylowe247@gmail.com",
+		  		subject:"The Pink Playhouse - Account Changes",
+		  		text: msg
+		  	}
+		  	transporter.sendMail(mailOptions, (error, info)=>{
+		  		if(error){
+		  			console.log(error);
+		  		}else{
+		  			console.log("email sent:", info.response)
+		  		}
+		  	})
 		next();
 	}
 module.exports = mailerObject;
