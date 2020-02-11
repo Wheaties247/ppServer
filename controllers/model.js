@@ -29,7 +29,8 @@ router.put("/edit", girl.edit, (req, res)=>{
 })
 router.get("/all", girl.getAll, (req, res)=>{
 	console.log("ALL Models")
-	res.json({resp:"ALL MODELS"})
+	const allModels = res.locals.models
+	res.json({resp:allModels})
 })
 router.post("/imgUpload", girl.uploadImage ,(req, res)=>{
 	console.log("Upload Model End")

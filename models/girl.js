@@ -137,6 +137,7 @@ girlModelObject.getAll = (req, res, next)=>{
   .manyOrNone("SELECT * FROM models;")
   .then(resp=>{
     console.log("SELECT ALL FROM MODEL RESPONCE", resp)
+    res.locals.models = resp
       next()
   })
   .catch(err=>{
