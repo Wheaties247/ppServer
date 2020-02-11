@@ -131,6 +131,20 @@ const girlModelObject = {};
           
 
 }
+girlModelObject.getAll = (req, res, next)=>{
+  console.log("Inside getAll")
+  db
+  .manyOrNone("SELECT * FROM models;")
+  .then(resp=>{
+    console.log("SELECT ALL FROM MODEL RESPONCE", resp)
+      next()
+  })
+  .catch(err=>{
+    console.log("there was an error in get all models", err)
+    next(err);
+  })
+
+}
 
 girlModelObject.uploadImage =(req, res, next)=>{
     cloudinary.config({
@@ -140,7 +154,7 @@ girlModelObject.uploadImage =(req, res, next)=>{
     })
     const url = "https://api.cloudinary.com/v1_1/thepinkimageserver"
     // const upload_preset = "tkl7opjd"
-    console.log("within uploadImage model", req)
+    console.log("within uploadImage model", req.file)
     next();
     // axios({
     //   method:"POST",

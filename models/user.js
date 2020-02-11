@@ -129,4 +129,25 @@ userModelObject.edit = (req, res, next) =>{
           
 
 }
+userModelObject.getUserInfo = (req, res, next)=>{
+  console.log("Within getUserInfo", req.body)
+  db
+    .oneOrNone(
+      `SELECT * from USERS WHERE user_id = $1;`,
+      [
+        req.body.id
+      ]
+    )
+    .then(resp=>{
+      console.log("successful get User Info", resp)
+      res.locals.userInfo = resp
+      console.log("res.locals", res.locals)
+      next();
+
+    })
+    .catch(err=>{
+      console.log("there was an error in getUserInfo", err)
+      next(err);
+    })
+}
 module.exports = userModelObject;

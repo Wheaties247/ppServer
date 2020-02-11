@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken');
 
  
 const mailerObject = {};
+
 	mailerObject.registrationEmail = (req, res, next)=>{
 		if(res.locals.userCreds!=="User already created"){
 			const token = jwt.sign(req.body.username, process.env.SECRET_TOKEN)
@@ -18,14 +19,14 @@ const mailerObject = {};
 		    }
 		  	});
 
-		  	const url = `http://localhost:7770/users/confirmAccount/${token}`
+		  	const url = `http://localhost:7770${req.baseUrl}/confirmAccount/${token}`
 		  	const mailOptions = {
 		  		from:process.env.EMAIL,
 		  		// req.body.email
 		  		to:"timothylowe247@gmail.com",
 		  		subject:"Welcome to the Playhouse",
 		  		text:`
-		  		Welcome ${req.body.username} to The Pink Playhouse 
+		  		Welcome ${req.body.username}, to The Pink Playhouse 
 
 		  		In order to activate your account please click this link ${url}
 		  		`
@@ -50,8 +51,10 @@ const mailerObject = {};
 				next()
 
 			}else{
+				const model = req.baseUrl.slice(1);
+				console.log("POST SlICE", model)
 				db
-				.one('UPDATE USERS SET confirmed= true WHERE user_name = $1 RETURNING *;',[
+				.one(`UPDATE ${model} SET confirmed= true WHERE user_name = $1 RETURNING *;`,[
 						user
 					])
 				.then(resp=>{
@@ -73,9 +76,7 @@ const mailerObject = {};
    			user_name,
 		    email,
 		    tokens,
-		    payment_info,
-		    password_digest,
-		    confirmed
+		    payment_info
  				} = res.locals.editResp
 		const transporter = nodemailer.createTransport({
 		    service: "gmail",

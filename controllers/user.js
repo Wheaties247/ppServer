@@ -6,6 +6,13 @@ router.post("/login", user.login, (req, res)=>{
 
 	res.json({userCreds:res.locals.userCreds})
 })
+router.post("/currUserData",
+	user.getUserInfo,
+	(req, res)=>{
+		const data = res.locals.userInfo
+		console.log("Completed currentUserData", data )
+		res.json({userInfo: data})
+	} )
 router.post("/register",
 	user.create, 
 	mailer.registrationEmail,
